@@ -1,0 +1,53 @@
+#once
+#bankdef b4b
+{
+    #addr 0x00
+    #addr_end 0xff
+    #outp 4 * 0x00
+	#bits 4
+}
+
+#subruledef register
+{
+    a => 0x0
+    b => 0x8
+}
+
+#ruledef
+{
+	ldi {r: register},{value: u4} =>
+	{
+		temp = (r | 0)
+		value @ temp`4
+	}
+	
+	pt {r: register},{value: u4} =>
+	{
+		temp = (r | 1)
+		value @ temp`4
+	}
+	
+	add {r: register},{value: u4} =>
+	{
+		temp = (r | 2)
+		value @ temp`4
+	}
+	
+	nand {r: register},{value: u4} =>
+	{
+		temp = (r | 3)
+		value @ temp`4
+	}
+	
+	ld =>
+	{
+		temp = (a | 4)
+		value @ temp`4
+	}
+	
+	st =>
+	{
+		temp = (b | 4)
+		value @ temp`4
+	}
+}

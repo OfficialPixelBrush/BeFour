@@ -1,0 +1,6 @@
+#include "b4b.b4b"
+
+LDI A,5
+PT B,0
+LDI B,6
+ADD B,0
