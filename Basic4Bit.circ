@@ -10,9 +10,6 @@
       <a name="appearance" val="classic"/>
       <a name="facing" val="south"/>
     </tool>
-    <tool name="Pull Resistor">
-      <a name="facing" val="west"/>
-    </tool>
   </lib>
   <lib desc="#Gates" name="1">
     <tool name="Controlled Buffer">
@@ -88,7 +85,7 @@
     <a name="appearance" val="logisim_evolution"/>
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="1.0"/>
+    <a name="simulationFrequency" val="16.0"/>
     <comp lib="0" loc="(100,290)" name="Splitter">
       <a name="facing" val="west"/>
       <a name="fanout" val="8"/>
@@ -304,6 +301,11 @@
       <a name="value" val="0x0"/>
     </comp>
     <comp lib="0" loc="(1510,1040)" name="Constant"/>
+    <comp lib="0" loc="(1530,600)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="TEMPIN"/>
+      <a name="width" val="4"/>
+    </comp>
     <comp lib="0" loc="(1540,510)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="nRESET"/>
@@ -312,6 +314,7 @@
       <a name="facing" val="east"/>
       <a name="label" val="RD"/>
     </comp>
+    <comp lib="0" loc="(1540,600)" name="Pull Resistor"/>
     <comp lib="0" loc="(1550,320)" name="Tunnel">
       <a name="label" val="wrA"/>
     </comp>
@@ -320,11 +323,6 @@
       <a name="fanout" val="4"/>
       <a name="incoming" val="4"/>
       <a name="spacing" val="2"/>
-    </comp>
-    <comp lib="0" loc="(1550,600)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="TEMPIN"/>
-      <a name="width" val="4"/>
     </comp>
     <comp lib="0" loc="(1570,640)" name="Constant">
       <a name="value" val="0x0"/>
@@ -611,10 +609,6 @@
       <a name="facing" val="north"/>
       <a name="label" val="AB"/>
     </comp>
-    <comp lib="0" loc="(670,410)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="RESET"/>
-    </comp>
     <comp lib="0" loc="(670,830)" name="Splitter">
       <a name="bit1" val="0"/>
       <a name="bit2" val="0"/>
@@ -622,10 +616,14 @@
       <a name="facing" val="south"/>
       <a name="incoming" val="4"/>
     </comp>
+    <comp lib="0" loc="(680,430)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="RESET"/>
+    </comp>
     <comp lib="0" loc="(680,850)" name="Constant">
       <a name="value" val="0x0"/>
     </comp>
-    <comp lib="0" loc="(690,430)" name="Constant">
+    <comp lib="0" loc="(690,410)" name="Constant">
       <a name="value" val="0x0"/>
     </comp>
     <comp lib="0" loc="(690,450)" name="Constant">
@@ -1143,10 +1141,12 @@ f1 11 22 33 44 55 66 77
     <wire from="(1480,340)" to="(1480,400)"/>
     <wire from="(1480,340)" to="(1500,340)"/>
     <wire from="(1500,1060)" to="(1510,1060)"/>
+    <wire from="(1530,600)" to="(1540,600)"/>
     <wire from="(1540,1110)" to="(1540,1230)"/>
     <wire from="(1540,1110)" to="(1580,1110)"/>
     <wire from="(1540,510)" to="(1550,510)"/>
     <wire from="(1540,540)" to="(1570,540)"/>
+    <wire from="(1540,600)" to="(1550,600)"/>
     <wire from="(1550,510)" to="(1550,520)"/>
     <wire from="(1550,520)" to="(1570,520)"/>
     <wire from="(1560,1170)" to="(1560,1230)"/>
@@ -1251,7 +1251,7 @@ f1 11 22 33 44 55 66 77
     <wire from="(590,830)" to="(590,840)"/>
     <wire from="(590,840)" to="(600,840)"/>
     <wire from="(600,840)" to="(600,850)"/>
-    <wire from="(670,410)" to="(690,410)"/>
+    <wire from="(680,430)" to="(690,430)"/>
     <wire from="(740,830)" to="(740,840)"/>
     <wire from="(740,840)" to="(760,840)"/>
     <wire from="(750,390)" to="(760,390)"/>

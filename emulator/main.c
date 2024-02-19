@@ -1,0 +1,35 @@
+#include <stdio.h>
+typedef unsigned char byte;
+
+int main() {
+	byte mem[256] = {0x30,0x58,0x01,0x30,0xf9,0x52,0xfa,0x04};
+	byte A,B,PC = 0x00;
+	byte power = 1;
+	byte inst, data;
+	
+	while(power) {
+		inst = mem[pc] & 0x0F;
+		data = (mem[pc] & 0xF0) >> 4;
+		switch(inst) {
+			case 0x0:
+				
+			case 0x1:
+			case 0x2:
+			case 0x3:
+			case 0x4:
+			case 0x5:
+			case 0x6:
+			case 0x7:
+			case 0x8:
+			case 0x9:
+			case 0xA:
+			case 0xB:
+			case 0xC:
+			case 0xD:
+			case 0xE:
+			case 0xF:
+		}
+		pc++;
+	}
+	return 0;
+}
