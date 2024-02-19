@@ -1,4 +1,4 @@
-#include "b4b.b4b"
+#include "b4.b4"
 
 LDI A,5
 PT B,0
