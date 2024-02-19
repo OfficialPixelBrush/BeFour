@@ -1,2 +1,2 @@
-# Basic4Bit
+# BeFour
  Very Basic TTL 4-Bit CPU
