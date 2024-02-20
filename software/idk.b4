@@ -1,0 +1,24 @@
+#include "b4.b4"
+
+start:
+; load starting values in A & B
+LDI 3,A
+LDI 5,B
+; Place contents of B into A
+PT A
+; Reload 3 into A
+LDI 3,A
+; Replace contents of B with A
+PT B
+; Add immediate 7 to A
+ADD 7,A
+; Add A and B
+ADD B,A
+; Load Pointer B into A
+LD [B],A
+; set carry flag to 1
+CMP B
+JPCF 1
+
+end:
+JPCN 0

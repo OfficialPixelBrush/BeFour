@@ -1,6 +1,6 @@
 #include "b4.b4"
 
-LDI A,5
-PT B,0
-LDI B,6
-ADD B,0
+LDI 5,A
+PT B
+LDI 6,B
+ADD B

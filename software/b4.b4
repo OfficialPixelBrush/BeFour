@@ -1,53 +1,113 @@
 #once
-#bankdef b4b
+#bankdef b4
 {
     #addr 0x00
     #addr_end 0xff
-    #outp 4 * 0x00
-	#bits 4
+    #outp 8 * 0x00
+	#bits 8
+	; this is used to make sure that
+	; each label is aligned to the sector grid
+	#labelalign 128
 }
+
+registerA = 0x0
+registerB = 0x8
+noValue = 0x0
 
 #subruledef register
 {
-    a => 0x0
-    b => 0x8
+    a => registerA
+    b => registerB
 }
 
 #ruledef
 {
-	ldi {r: register},{value: u4} =>
+	; Variable Mode
+
+	ldi {value: u4},{r: register} =>
 	{
 		temp = (r | 0)
 		value @ temp`4
 	}
 	
-	pt {r: register},{value: u4} =>
+	pt {r: register} =>
 	{
 		temp = (r | 1)
+		noValue @ temp`4
+	}
+	
+	cmp {r: register} =>
+	{
+		temp = (r | 5)
+		noValue @ temp`4
+	}
+	
+	jpc {r: register},{value: u4} =>
+	{
+		temp = (r | 6)
 		value @ temp`4
 	}
 	
-	add {r: register},{value: u4} =>
+	jpz {r: register},{value: u4} =>
 	{
-		temp = (r | 2)
+		temp = (r | 7)
 		value @ temp`4
 	}
 	
-	nand {r: register},{value: u4} =>
+	; Mode A
+	add {value: u4},a =>
 	{
-		temp = (r | 3)
+		temp = (registerA | 2)
 		value @ temp`4
 	}
 	
-	ld =>
+	nand {value: u4},a =>
 	{
-		temp = (a | 4)
+		temp = (registerA | 3)
 		value @ temp`4
 	}
 	
-	st =>
+	ld [b],a =>
 	{
-		temp = (b | 4)
+		temp = (registerA | 4)
+		noValue @ temp`4
+	}
+	
+	jpcn {value: u4} =>
+	{
+		temp = (registerA | 6)
+		value @ temp`4
+	}
+	
+	jpzn {value: u4} =>
+	{
+		temp = (registerA | 7)
+		value @ temp`4
+	}
+	
+	; Mode B
+	
+	st a,[b] =>
+	{
+		temp = (registerB | 4)
+		noValue @ temp`4
+	}
+	
+	add b,a =>
+	{
+		temp = (registerB | 2)
+		noValue @ temp`4
+	}
+	
+	jpcf {value: u4} =>
+	{
+		temp = (registerB | 6)
+		value @ temp`4
+	}
+	
+	jpzf {value: u4} =>
+	{
+		temp = (registerB | 7)
 		value @ temp`4
 	}
 }
