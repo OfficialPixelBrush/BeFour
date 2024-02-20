@@ -1,0 +1,18 @@
+#include "b4.b4"
+
+; init
+LDI 1,A
+LDI 1,B
+
+; LCD init
+; TODO
+
+; if A == B
+CMP E
+JPCF loop
+
+; fibo loop
+loop:
+ADD B
+
+; LCD print

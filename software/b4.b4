@@ -55,7 +55,7 @@ noValue = 0x0
 	}
 	
 	; Mode A
-	add {value: u4},a =>
+	add {value: u4} =>
 	{
 		temp = (registerA | 2)
 		value @ temp`4
@@ -70,6 +70,12 @@ noValue = 0x0
 	ld [b],a =>
 	{
 		temp = (registerA | 4)
+		noValue @ temp`4
+	}
+	
+	cmp e =>
+	{
+		temp = (registerA | 5)
 		noValue @ temp`4
 	}
 	
@@ -93,9 +99,15 @@ noValue = 0x0
 		noValue @ temp`4
 	}
 	
-	add b,a =>
+	add b =>
 	{
 		temp = (registerB | 2)
+		noValue @ temp`4
+	}
+	
+	cmp ne =>
+	{
+		temp = (registerB | 5)
 		noValue @ temp`4
 	}
 	

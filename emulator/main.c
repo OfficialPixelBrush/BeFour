@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 				} else {
 					carryFlag = 0;
 				}
-				printf("ADD %d,A (%d + %d)", data, oldA, data);
+				printf("ADD %d,A (A(%d( + imm(%d) + c(%d))", oldA, data, carryFlag);
 				break;
 			case 0x3: // NAND
 				A = (~(A & data) & 0xF);
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 				} else {
 					carryFlag = 0;
 				}
-				printf("ADD B,A (%d + %d)", oldA, oldB);
+				printf("ADD B,A (A(%d( + B(%d) + c(%d))", oldA, oldB, carryFlag);
 				break;
 			case 0xB: // NAND
 				A = (~(A & B) & 0xF);
