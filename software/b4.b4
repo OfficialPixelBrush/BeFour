@@ -30,12 +30,6 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	pt {r: register} =>
-	{
-		temp = (r | 1)
-		noValue @ temp`4
-	}
-	
 	cmp {r: register} =>
 	{
 		temp = (r | 5)
@@ -55,6 +49,12 @@ noValue = 0x0
 	}
 	
 	; Mode A
+	ld [{value: u4}],a =>
+	{
+		temp = (registerA | 1)
+		value @ temp`4
+	}
+	
 	add {value: u4} =>
 	{
 		temp = (registerA | 2)
@@ -67,16 +67,16 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	ld [b],a =>
+	cmp e =>
 	{
 		temp = (registerA | 4)
 		noValue @ temp`4
 	}
 	
-	cmp e =>
+	st a,[{value: u4}] =>
 	{
 		temp = (registerA | 5)
-		noValue @ temp`4
+		value @ temp`4
 	}
 	
 	jpcn {value: u4} =>
@@ -92,10 +92,9 @@ noValue = 0x0
 	}
 	
 	; Mode B
-	
-	st a,[b] =>
+	ld [b],a =>
 	{
-		temp = (registerB | 4)
+		temp = (registerB | 1)
 		noValue @ temp`4
 	}
 	
@@ -106,6 +105,12 @@ noValue = 0x0
 	}
 	
 	cmp ne =>
+	{
+		temp = (registerB | 4)
+		noValue @ temp`4
+	}
+	
+	st a,[b] =>
 	{
 		temp = (registerB | 5)
 		noValue @ temp`4

@@ -78,9 +78,9 @@ int main(int argc, char *argv[]) {
 				A = data;
 				printf("LDI %d,A", data);
 				break;
-			case 0x1: // PT
-				A = B;
-				printf("PT A");
+			case 0x1: // LD
+				A = mem[0xF0 | data];
+				printf("LD [%d],A", data);
 				break;
 			case 0x2: // ADD
 				A = A + data + carryFlag;
@@ -96,17 +96,17 @@ int main(int argc, char *argv[]) {
 				A = (~(A & data) & 0xF);
 				printf("NAND %d,A (%d nand %d)", data, oldA, data);
 				break;
-			case 0x4: // LD
-				A = mem[0xF0 | B];
-				printf("LD [%d],A (%01X)", B, A&0xF);
-				break;
-			case 0x5: // CMP
+			case 0x4: // CMP
 				if (A==B) {
 					carryFlag = 1;
 				} else {
 					carryFlag = 0;
 				}
 				printf("CMP (A==B)");
+				break;
+			case 0x5: // ST
+				mem[0xF0 | data] = A;
+				printf("ST A,[%d] (%01X)", data, A&0xF);
 				break;
 			case 0x6: // JPC
 				if (carryFlag) {
@@ -127,9 +127,9 @@ int main(int argc, char *argv[]) {
 				B = data;
 				printf("LDI %d,B", data);
 				break;
-			case 0x9: // PT
-				B = A;
-				printf("PT B");
+			case 0x9: // LD
+				A = mem[0xF0 | B];
+				printf("LD [%d],A", B);
 				break;
 			case 0xA: // ADD
 				A = A + B + carryFlag;
@@ -145,10 +145,6 @@ int main(int argc, char *argv[]) {
 				A = (~(A & B) & 0xF);
 				printf("NAND B,A (%d nand %d)", oldA, oldB);
 				break;
-			case 0xC: // ST
-				mem[0xF0 | B] = A;
-				printf("ST A,[%d]", B);
-				break;
 			case 0xD: // CMP
 				if (A!=B) {
 					carryFlag = 1;
@@ -156,6 +152,10 @@ int main(int argc, char *argv[]) {
 					carryFlag = 0;
 				}
 				printf("CMP B");
+				break;
+			case 0xC: // ST
+				mem[0xF0 | B] = A;
+				printf("ST A,[B] (%01X)", A&0xF);
 				break;
 			case 0xE: // JPC
 				if (carryFlag) {

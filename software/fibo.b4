@@ -9,10 +9,12 @@ LDI 1,B
 
 ; if A == B
 CMP E
-JPCF loop
+JPCF 1
 
 ; fibo loop
 loop:
+ST A,[0]
 ADD B
+LD [0],A
 
 ; LCD print
