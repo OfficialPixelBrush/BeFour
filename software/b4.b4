@@ -22,14 +22,15 @@ noValue = 0x0
 
 #subruledef flag
 {
-    s => 0x0
-    r => 0x1
-    z => 0x2
-    nz => 0x3
-    c => 0x4
-    nc => 0x5
-    e => 0x6
-    ne => 0x7
+    i => 0x0
+    z => 0x1
+    e => 0x2
+    s => 0x3
+	
+    o => 0x4
+    nz => 0x5
+    ne => 0x6
+    ns => 0x7
 }
 
 #ruledef
@@ -48,10 +49,21 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	cmp {r: register} =>
+	cmp {f: flag} =>
 	{
-		temp = (r | 4)
-		noValue @ temp`4
+        assert(flag >= i)
+        assert(flag <= s)
+		temp = (registerA | 4)
+		flagCut = (0`4 | (flag & 0x3))
+		flagCut @ temp`4
+	}
+	
+	cmp {f: flag} =>
+	{
+        assert(flag >= o)
+		temp = (registerB | 4)
+		flagCut = (0`4 | (flag & 0x3))
+		flagCut @ temp`4
 	}
 	
 	st {r: register},[{value: u4}] =>
@@ -86,12 +98,6 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	cmp {f: flag} =>
-	{
-		temp = (registerA | 4)
-		flag @ temp`4
-	}
-	
 	jpn {value: u4} =>
 	{
 		temp = (registerA | 6)
@@ -111,21 +117,17 @@ noValue = 0x0
 		noValue @ temp`4
 	}
 	
-	cmp {f: flag} =>
-	{
-		temp = (registerB | 4)
-		flag @ temp`4
-	}
-	
-	jpf {value: u4} =>
+	jpf {addr: u8} =>
 	{
 		temp = (registerB | 6)
-		value @ temp`4
+		shortAddr = (addr & 0xF0) >> 4;
+		shortAddr`4 @ temp`4
 	}
 	
-	jpcf {value: u4} =>
+	jpcf {addr: u8} =>
 	{
 		temp = (registerB | 7)
-		value @ temp`4
+		shortAddr = (addr & 0xF0) >> 4;
+		shortAddr`4 @ temp`4
 	}
 }

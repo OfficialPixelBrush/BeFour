@@ -1,16 +1,24 @@
 #include "b4.b4"
+firstTerm = 0
+secondTerm = 1
+nextTerm = 2
 
 ; init
-LDI 0,A
+LDI 0,B
+ST B,[firstTerm]
 LDI 1,B
-ST B,[0]
+ST B,[secondTerm]
+ST B,[nextTerm]
+JPF loop
 
 ; fibo loop
-CMP E
-LD [0],B
+loop:
+LD [secondTerm],A
+ST A,[firstTerm]
+LD [nextTerm],B
+ST B,[secondTerm]
 ADD B
-ST A,[0]
-CMP NE
-JPCN 2
+ST A,[nextTerm]
+JPN 0
 
 ; LCD print
