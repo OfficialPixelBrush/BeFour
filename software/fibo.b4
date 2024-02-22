@@ -19,6 +19,10 @@ LD [nextTerm],B
 ST B,[secondTerm]
 ADD B
 ST A,[nextTerm]
+; only use this once conditionals are in lol
+;JPCF finished 
 JPN 0
 
-; LCD print
+; enter infinite loop
+finished:
+JPN 0
