@@ -1,11 +1,8 @@
 #include "b4.b4"
 
 ; init
-LDI 1,A
+LDI 0,A
 LDI 1,B
-
-; LCD init
-; TODO
 
 ; if A == B
 CMP E
@@ -13,8 +10,10 @@ JPCF 1
 
 ; fibo loop
 loop:
-ST A,[0]
 ADD B
-LD [0],A
+ST A,[0]
+LD [0],B
+CMP NE
+JPCN 0
 
 ; LCD print

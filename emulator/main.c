@@ -64,37 +64,37 @@ int main(int argc, char *argv[]) {
 	byte oldCarryFlag = 0;
 	
 	// Internal magics
-	byte inst, data = 0x0;
+	byte inst, immediate = 0x0;
 	byte jumped = 0;
 	
 	while(currentCycle < maxCycle) {
 		inst = mem[PC] & 0x0F;
-		data = (mem[PC] & 0xF0) >> 4;
+		immediate = (mem[PC] & 0xF0) >> 4;
 		//printf("A:%X, B: %X | PC:%02X\n",A,B,PC);
-		//printf("Inst: %X, Data: %X | A:%X, B: %X | PC:%02X\n", inst,data,A,B,PC);
+		//printf("Inst: %X, immediate: %X | A:%X, B: %X | PC:%02X\n", inst,immediate,A,B,PC);
 		switch(inst) {
 			// A mode
 			case 0x0: // LDI
-				A = data;
-				printf("LDI %d,A", data);
+				A = immediate;
+				printf("LDI %01X,A", immediate);
 				break;
 			case 0x1: // LD
-				A = mem[0xF0 | data];
-				printf("LD [%d],A", data);
+				A = mem[0xF0 | immediate];
+				printf("LD [%01X],A (%01X)", immediate, A);
 				break;
 			case 0x2: // ADD
-				A = A + data + carryFlag;
+				A = A + immediate + carryFlag;
 				if (A > 0xF) {
 					A = A & 0xF;
 					carryFlag = 1;
 				} else {
 					carryFlag = 0;
 				}
-				printf("ADD %d,A (A(%d( + imm(%d) + c(%d))", oldA, data, carryFlag);
+				printf("ADD %01X,A (%d+%d+%d)", immediate, oldA, immediate, oldCarryFlag);
 				break;
 			case 0x3: // NAND
-				A = (~(A & data) & 0xF);
-				printf("NAND %d,A (%d nand %d)", data, oldA, data);
+				A = (~(A & immediate) & 0xF);
+				printf("NAND %01X,A (%d nand %d)", immediate, oldA, immediate);
 				break;
 			case 0x4: // CMP
 				if (A==B) {
@@ -102,34 +102,34 @@ int main(int argc, char *argv[]) {
 				} else {
 					carryFlag = 0;
 				}
-				printf("CMP (A==B)");
+				printf("CMP E");
 				break;
 			case 0x5: // ST
-				mem[0xF0 | data] = A;
-				printf("ST A,[%d] (%01X)", data, A&0xF);
+				mem[0xF0 | immediate] = A;
+				printf("ST A,[%01X] (%01X)", immediate, A&0xF);
 				break;
 			case 0x6: // JPC
 				if (carryFlag) {
-					PC = (PC & 0xF0) | data;
+					PC = (PC & 0xF0) | immediate;
 					jumped = 1;
 				}
 				printf("JPC (near)");
 				break;
 			case 0x7: // JPZ
 				if (A==0) {
-					PC = (PC & 0xF0) | data;
+					PC = (PC & 0xF0) | immediate;
 					jumped = 1;
 				}
 				printf("JPZ (near)");
 				break;
 			// B mode
 			case 0x8: // LDI
-				B = data;
-				printf("LDI %d,B", data);
+				B = immediate;
+				printf("LDI %01X,B", immediate);
 				break;
 			case 0x9: // LD
-				A = mem[0xF0 | B];
-				printf("LD [%d],A", B);
+				B = mem[0xF0 | immediate];
+				printf("LD [%01X],B (%01X)", immediate, B);
 				break;
 			case 0xA: // ADD
 				A = A + B + carryFlag;
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 				} else {
 					carryFlag = 0;
 				}
-				printf("ADD B,A (A(%d( + B(%d) + c(%d))", oldA, oldB, carryFlag);
+				printf("ADD B,A (%d+%d+%d)", oldA, oldB, carryFlag);
 				break;
 			case 0xB: // NAND
 				A = (~(A & B) & 0xF);
@@ -151,22 +151,22 @@ int main(int argc, char *argv[]) {
 				} else {
 					carryFlag = 0;
 				}
-				printf("CMP B");
+				printf("CMP NE");
 				break;
 			case 0xC: // ST
-				mem[0xF0 | B] = A;
-				printf("ST A,[B] (%01X)", A&0xF);
+				mem[0xF0 | immediate] = B;
+				printf("ST B,[%01X] (%01X)", immediate, B);
 				break;
 			case 0xE: // JPC
 				if (carryFlag) {
-					PC = (data << 4) & 0xF0;
+					PC = (immediate << 4) & 0xF0;
 					jumped = 1;
 				}
 				printf("JPC (far)");
 				break;
 			case 0xF: // JPZ
 				if (A==0) {
-					PC = (data << 4) & 0xF0;
+					PC = (immediate << 4) & 0xF0;
 					jumped = 1;
 				}
 				printf("JPZ (far)");
