@@ -3,17 +3,14 @@
 ; init
 LDI 0,A
 LDI 1,B
-
-; if A == B
-CMP E
-JPCF 1
+ST B,[0]
 
 ; fibo loop
-loop:
+CMP E
+LD [0],B
 ADD B
 ST A,[0]
-LD [0],B
 CMP NE
-JPCN 0
+JPCN 2
 
 ; LCD print

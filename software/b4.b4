@@ -20,6 +20,18 @@ noValue = 0x0
     b => registerB
 }
 
+#subruledef flag
+{
+    s => 0x0
+    r => 0x1
+    z => 0x2
+    nz => 0x3
+    c => 0x4
+    nc => 0x5
+    e => 0x6
+    ne => 0x7
+}
+
 #ruledef
 {
 	; Variable Mode
@@ -48,13 +60,13 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	jpc {r: register},{value: u4} =>
+	jp {r: register},{value: u4} =>
 	{
 		temp = (r | 6)
 		value @ temp`4
 	}
 	
-	jpz {r: register},{value: u4} =>
+	jpc {r: register},{value: u4} =>
 	{
 		temp = (r | 7)
 		value @ temp`4
@@ -74,19 +86,19 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	cmp e =>
+	cmp {f: flag} =>
 	{
 		temp = (registerA | 4)
-		noValue @ temp`4
+		flag @ temp`4
 	}
 	
-	jpcn {value: u4} =>
+	jpn {value: u4} =>
 	{
 		temp = (registerA | 6)
 		value @ temp`4
 	}
 	
-	jpzn {value: u4} =>
+	jpcn {value: u4} =>
 	{
 		temp = (registerA | 7)
 		value @ temp`4
@@ -99,19 +111,19 @@ noValue = 0x0
 		noValue @ temp`4
 	}
 	
-	cmp ne =>
+	cmp {f: flag} =>
 	{
 		temp = (registerB | 4)
-		noValue @ temp`4
+		flag @ temp`4
 	}
 	
-	jpcf {value: u4} =>
+	jpf {value: u4} =>
 	{
 		temp = (registerB | 6)
 		value @ temp`4
 	}
 	
-	jpzf {value: u4} =>
+	jpcf {value: u4} =>
 	{
 		temp = (registerB | 7)
 		value @ temp`4
