@@ -1,5 +1,5 @@
 # BeFour
-The BeFour/B4/Be4 is a simplistic 4-Bit Microprocessor, largely inspired by the Zilog Z80 and similar architectures of the late-1970s and early-1980s, just in 4-Bit.
+The BeFour/B4/Be4 is a simplistic 4-Bit, TTL Processor, largely inspired by the Zilog Z80 and similar architectures of the late-1970s and early-1980s, just in 4-Bit.
 
 # Goal
 It's main idea is simple. How basic can I make an instruction set, while still making it somewhat useful?
