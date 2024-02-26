@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 				printf("LDI %01X,A", immediate);
 				break;
 			case 0x1: // LD
-				A = mem[0xF0 | immediate];
+				A = mem[0xF0 | immediate] >> 4;
 				printf("LD [%01X],A (%01X)", immediate, A);
 				break;
 			case 0x2: // ADD
@@ -102,27 +102,27 @@ int main(int argc, char *argv[]) {
 				switch(immediate & 0b0111) {
 					case 0: // Set
 						conditionalFlag = 1;
-						printf("I");
+						printf("Set");
 						break;
 					case 1: // Zero
 						conditionalFlag = (A == 0);
-						printf("Z");
+						printf("Zero");
 						break;
 					case 2: // Equal
 						conditionalFlag = (A == B);
-						printf("E");
+						printf("Equal");
 						break;
 					case 3: // Sign
 						conditionalFlag = ((A&0b1000) >> 3);
-						printf("S");
+						printf("Sign");
 						break;
 					default:
 						printf("Invalid condition!\n");
 				}
 				break;
 			case 0x5: // ST
-				mem[0xF0 | immediate] = A;
-				printf("ST A,[%01X] (%01X)", immediate, A&0xF);
+				mem[0xF0 | immediate] = (A << 4) | B;
+				printf("ST A,[%01X] (%01X%01X)", immediate, A&0xF, B);
 				break;
 			case 0x6: // JP
 				PC = (PC & 0xF0) | immediate;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 				printf("LDI %01X,B", immediate);
 				break;
 			case 0x9: // LD
-				B = mem[0xF0 | immediate];
+				B = mem[0xF0 | immediate] >> 4;
 				printf("LD [%01X],B (%01X)", immediate, B);
 				break;
 			case 0xA: // ADD
@@ -164,27 +164,27 @@ int main(int argc, char *argv[]) {
 				switch(immediate & 0b0111) {
 					case 0: // Reset
 						conditionalFlag = 0;
-						printf("O");
+						printf("Reset");
 						break;
 					case 1: // Not Zero
 						conditionalFlag = ~(A == 0);
-						printf("NZ");
+						printf("Not Zero");
 						break;
 					case 2: // Not Equal
 						conditionalFlag = ~(A == B);
-						printf("NE");
+						printf("Not Equal");
 						break;
 					case 3: // Not Sign
 						conditionalFlag = ~((A&0b1000) >> 3);
-						printf("NS");
+						printf("Not Sign");
 						break;
 					default:
 						printf("Invalid condition!\n");
 				}
 				break;
 			case 0xD: // ST
-				mem[0xF0 | immediate] = B;
-				printf("ST B,[%01X] (%01X)", immediate, B);
+				mem[0xF0 | immediate] = (B << 4) | B;
+				printf("ST B,[%01X] (%01X%01X)", immediate, B,B);
 				break;
 			case 0xE: // JP
 				PC = (immediate << 4) & 0xF0;

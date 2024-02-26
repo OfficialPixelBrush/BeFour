@@ -22,15 +22,25 @@ noValue = 0x0
 
 #subruledef flag
 {
-    i => 0x0
-    z => 0x1
-    e => 0x2
-    s => 0x3
+    en => 0
+    z => 1
+    e => 2
+    s => 3
 	
-    o => 0x4
-    nz => 0x5
-    ne => 0x6
-    ns => 0x7
+    d0 => 4
+    d1 => 5
+    d2 => 6
+    d3 => 7
+	
+    dis => 8
+    nz => 9
+    ne => 10
+    ns => 11
+	
+    nd0 => 12
+    nd1 => 13
+    nd2 => 14
+    nd3 => 15
 }
 
 #ruledef
@@ -51,19 +61,18 @@ noValue = 0x0
 	
 	cmp {f: flag} =>
 	{
-        assert(flag >= i)
-        assert(flag <= s)
+        assert(f <= 7)
 		temp = (registerA | 4)
-		flagCut = (0`4 | (flag & 0x3))
-		flagCut @ temp`4
+		flagCut = (0`4 | (f & 0x7))
+		flagCut`4 @ temp`4
 	}
 	
 	cmp {f: flag} =>
 	{
-        assert(flag >= o)
+        assert(f >= 8)
 		temp = (registerB | 4)
-		flagCut = (0`4 | (flag & 0x3))
-		flagCut @ temp`4
+		flagCut = (0`4 | (f & 0x7))
+		flagCut`4 @ temp`4
 	}
 	
 	st {r: register},[{value: u4}] =>
@@ -92,7 +101,7 @@ noValue = 0x0
 		value @ temp`4
 	}
 	
-	nand {value: u4},a =>
+	nand {value: u4} =>
 	{
 		temp = (registerA | 3)
 		value @ temp`4
@@ -114,6 +123,12 @@ noValue = 0x0
 	add b =>
 	{
 		temp = (registerB | 2)
+		noValue @ temp`4
+	}
+
+	nand b =>
+	{
+		temp = (registerB | 3)
 		noValue @ temp`4
 	}
 	
