@@ -1,8 +1,15 @@
-#include "b4.b4"
+#include "b4.asm"
 firstTerm = 0
 secondTerm = 1
 nextTerm = 2
 
+; This tests:
+; LDI A/B
+; LD A/B
+; ST A/B
+; ADD B
+; JP A/B
+; JPC B (with carry)
 ; init
 LDI 0,B
 ST B,[firstTerm]
@@ -20,9 +27,8 @@ ST B,[secondTerm]
 ADD B
 ST A,[nextTerm]
 ; only use this once conditionals are in lol
-;JPCF finished 
+JPCF finished 
 JPN 0
 
-; enter infinite loop
+; A should have 5, B should have d
 finished:
-JPN 0

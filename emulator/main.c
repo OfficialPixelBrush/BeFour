@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 		immediate = (mem[PC] & 0xF0) >> 4;
 		printf("%02X: ", PC);
 		//printf("A:%X, B: %X | PC:%02X\n",A,B,PC);
-		//printf("Inst: %X, immediate: %X | A:%X, B: %X | PC:%02X\n", inst,immediate,A,B,PC);
+		printf("Inst: %X, immediate: %X | A:%X, B: %X, Cond:%X | PC:%02X\n", inst,immediate,A,B,conditionalFlag,PC);
 		switch(inst) {
 			// A mode
 			case 0x0: // LDI
