@@ -15,6 +15,23 @@ For more information about the Architecture, Instruction Set, Memory Map, et cet
 The provide Emulator is accurate enough for most simple Programs, and can be compiled easily with gcc.
 Pre-built Binaries can usually be found in the Releases section, although these may not always be up-to-date.
 
+## How to use
+The emulator takes two parameters. The first is the filename of whichever Binary file it's supposed to execute. The second is how many instructions it'll execute before stopping. By default, this is -1, meaning it'll stop right away.
+
+### Windows
+To execute the provided Fibonacci Program, for example, one could use `.\b4emu.exe ..\software\fibo.bin 50` to execute the Fibbonaci Program for 50 Instructions.
+
+### Linux
+Similar to Windows, just different formatting:
+`b4emu ../software/fibo.bin 50`
+Outside of that, make sure the binary is set to be executable.
+`chmod +x b4emu`
+
+## Binaries
+You can find all Releases in the [Releases Section](https://github.com/OfficialPixelBrush/BeFour/releases).
+- [Windows](https://github.com/OfficialPixelBrush/BeFour/releases/latest/download/b4emu.exe)
+- Linux (tba)
+
 # License
 It's been difficult finding a proper license for this thus far, especially because I don't see why anyone'd want to do much with this thing.
 It's my processor, feel free to be inspired by it, but don't steal it, and don't use it commercially. I'll probably replace this with a proper license sometime soon, but if you have any deeper questions, just shoot me a message via an Issue or something.
