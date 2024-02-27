@@ -23,7 +23,7 @@ To execute the provided Fibonacci Program, for example, one could use `.\b4emu.e
 
 ### Linux
 Similar to Windows, just different formatting:
-`b4emu ../software/fibo.bin 50`
+`./b4emu ../software/fibo.bin 50`
 Outside of that, make sure the binary is set to be executable.
 `chmod +x b4emu`
 
