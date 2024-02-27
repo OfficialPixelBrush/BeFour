@@ -29,8 +29,6 @@ Outside of that, make sure the binary is set to be executable.
 
 ## Binaries
 You can find all Releases in the [Releases Section](https://github.com/OfficialPixelBrush/BeFour/releases).
-- [Windows](https://github.com/OfficialPixelBrush/BeFour/releases/download/latest/b4emu.exe)
-- Linux (tba)
 
 # License
 It's been difficult finding a proper license for this thus far, especially because I don't see why anyone'd want to do much with this thing.
