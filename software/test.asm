@@ -56,9 +56,9 @@ JPF results
 results:
 LDI 0,B
 LD [returnCode],A
-JPN 0
+JPN 2
 
 fail:
 LD [returnCode],B
 LDI 0,A
-JPN 0
+JPN 2

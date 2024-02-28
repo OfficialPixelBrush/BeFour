@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #define MEMSIZE 256
 typedef unsigned char byte;
+
+#define printCurrentState 1 << 0
+#define printExecInst     1 << 1
+#define printChanges 	  1 << 2
 
 byte INTMEM[MEMSIZE] = {
 	0x30, 0x58, 0x01, 0x30, 0xf9, 0x72, 0xfa, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -24,11 +27,126 @@ byte INTMEM[MEMSIZE] = {
 	0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0xf1, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88
 };
 
+// Internal Vars
+byte mem[MEMSIZE];
+int maxCycle = -1;
+int currentCycle = 0;
+int debugOutput = 0;
+
+// Regs
+byte A = 0;
+byte B = 0;
+byte PC = 0;
+byte conditionalFlag = 0;
+
+// Old Regs
+byte oldA = 0;
+byte oldB = 0;
+byte oldPC = 0;
+byte oldConditionalFlag = 0;
+
+// Internal magics
+byte inst, immediate = 0x0;
+byte jumped = 0;
+
+int printIndent() {
+	if (debugOutput & ~printChanges) {
+		printf("\t\t");
+	}
+}
+
+int printExecutedInstruction() {
+	printf("%02X: ", PC);
+	switch(inst) {
+		// A mode
+		case 0x0: // LDI
+			printf("LDI %01X,A", immediate);
+			break;
+		case 0x1: // LD
+			printf("LD [%01X],A (%01X)", immediate, A);
+			break;
+		case 0x2: // ADD
+			printf("ADD %01X,A (%d+%d+%d)", immediate, oldA, immediate, oldConditionalFlag);
+			break;
+		case 0x3: // NAND
+			printf("NAND %01X,A (%d nand %d)", immediate, oldA, immediate);
+			break;
+		case 0x4: // CMP
+			printf("CMP ");
+			switch(immediate & 0b0111) {
+				case 0: // Set
+					printf("Set");
+					break;
+				case 1: // Zero
+					printf("Zero");
+					break;
+				case 2: // Equal
+					printf("Equal");
+					break;
+				case 3: // Sign
+					printf("Sign");
+					break;
+				default:
+					printf("Invalid condition!\n");
+			}
+			break;
+		case 0x5: // ST
+			printf("ST A,[%01X] (%01X%01X)", immediate, A&0xF, B);
+			break;
+		case 0x6: // JP
+			printf("JP (near)");
+			break;
+		case 0x7: // JPC
+			printf("JPC (near)");
+			break;
+		// B mode
+		case 0x8: // LDI
+			printf("LDI %01X,B", immediate);
+			break;
+		case 0x9: // LD
+			printf("LD [%01X],B (%01X)", immediate, B);
+			break;
+		case 0xA: // ADD
+			printf("ADD B,A (%d+%d+%d)", oldA, oldB, oldConditionalFlag);
+			break;
+		case 0xB: // NAND
+			printf("NAND B,A (%d nand %d)", oldA, oldB);
+			break;
+		case 0xC: // CMP
+			printf("CMP ");
+			switch(immediate & 0b0111) {
+				case 0: // Reset
+					printf("Reset");
+					break;
+				case 1: // Not Zero
+					printf("Not Zero");
+					break;
+				case 2: // Not Equal
+					printf("Not Equal");
+					break;
+				case 3: // Not Sign
+					printf("Not Sign");
+					break;
+				default:
+					printf("Invalid condition!\n");
+			}
+			break;
+		case 0xD: // ST
+			printf("ST B,[%01X] (%01X%01X)", immediate, B,B);
+			break;
+		case 0xE: // JP
+			printf("JP (far)");
+			break;
+		case 0xF: // JPC
+			printf("JPC (far)");
+			break;
+	}
+	printf("\n");
+	return 0;
+}
+
 int main(int argc, char *argv[]) {
 	FILE *fptr;
-	byte mem[MEMSIZE];
-	int maxCycle = -1;
-	int currentCycle = 0;
 	
 	// Argument Handling
 	if (argc > 1) {
@@ -42,46 +160,36 @@ int main(int argc, char *argv[]) {
 		//while()
 		fread(&mem, sizeof(byte), MEMSIZE, fptr); 
 		fclose(fptr);
+
 		if (argc > 2) {
 			// Stop after # of cycles
-			maxCycle = atoi(argv[2]);
+			debugOutput = atoi(argv[2]);
+		}
+
+		if (argc > 3) {
+			// Stop after # of cycles
+			maxCycle = atoi(argv[3]);
 		}
 	} else {
 		for (int i = 0; i < MEMSIZE; i++) {
 			mem[i] = INTMEM[i];
 		}
 	}
-	// Regs
-	byte A = 0;
-	byte B = 0;
-	byte PC = 0;
-	byte conditionalFlag = 0;
 	
-	// Old Regs
-	byte oldA = 0;
-	byte oldB = 0;
-	byte oldPC = 0;
-	byte oldConditionalFlag = 0;
-	
-	// Internal magics
-	byte inst, immediate = 0x0;
-	byte jumped = 0;
-	
-	while(currentCycle < maxCycle) {
+	while((currentCycle < maxCycle) || (maxCycle == -1)) {
 		inst = mem[PC] & 0x0F;
 		immediate = (mem[PC] & 0xF0) >> 4;
-		printf("%02X: ", PC);
 		//printf("A:%X, B: %X | PC:%02X\n",A,B,PC);
-		printf("Inst: %X, immediate: %X | A:%X, B: %X, Cond:%X | PC:%02X\n", inst,immediate,A,B,conditionalFlag,PC);
+		if (debugOutput & printCurrentState) {
+			printf("Inst: %X, immediate: %X | A:%X, B: %X, Cond:%X | PC:%02X\n", inst,immediate,A,B,conditionalFlag,PC);
+		}
 		switch(inst) {
 			// A mode
 			case 0x0: // LDI
 				A = immediate;
-				printf("LDI %01X,A", immediate);
 				break;
 			case 0x1: // LD
 				A = mem[0xF0 | immediate] >> 4;
-				printf("LD [%01X],A (%01X)", immediate, A);
 				break;
 			case 0x2: // ADD
 				A = A + immediate + conditionalFlag;
@@ -91,59 +199,47 @@ int main(int argc, char *argv[]) {
 				} else {
 					conditionalFlag = 0;
 				}
-				printf("ADD %01X,A (%d+%d+%d)", immediate, oldA, immediate, oldConditionalFlag);
 				break;
 			case 0x3: // NAND
 				A = (~(A & immediate) & 0xF);
-				printf("NAND %01X,A (%d nand %d)", immediate, oldA, immediate);
 				break;
 			case 0x4: // CMP
-				printf("CMP ");
 				switch(immediate & 0b0111) {
 					case 0: // Set
 						conditionalFlag = 1;
-						printf("Set");
 						break;
 					case 1: // Zero
 						conditionalFlag = (A == 0);
-						printf("Zero");
 						break;
 					case 2: // Equal
 						conditionalFlag = (A == B);
-						printf("Equal");
 						break;
 					case 3: // Sign
 						conditionalFlag = ((A&0b1000) >> 3);
-						printf("Sign");
 						break;
 					default:
-						printf("Invalid condition!\n");
+						break;
 				}
 				break;
 			case 0x5: // ST
 				mem[0xF0 | immediate] = (A << 4) | B;
-				printf("ST A,[%01X] (%01X%01X)", immediate, A&0xF, B);
 				break;
 			case 0x6: // JP
 				PC = (PC & 0xF0) | immediate;
 				jumped = 1;
-				printf("JP (near)");
 				break;
 			case 0x7: // JPC
 				if (conditionalFlag) {
 					PC = (PC & 0xF0) | immediate;
 					jumped = 1;
 				}
-				printf("JPC (near)");
 				break;
 			// B mode
 			case 0x8: // LDI
 				B = immediate;
-				printf("LDI %01X,B", immediate);
 				break;
 			case 0x9: // LD
 				B = mem[0xF0 | immediate] >> 4;
-				printf("LD [%01X],B (%01X)", immediate, B);
 				break;
 			case 0xA: // ADD
 				A = A + B + conditionalFlag;
@@ -153,71 +249,70 @@ int main(int argc, char *argv[]) {
 				} else {
 					conditionalFlag = 0;
 				}
-				printf("ADD B,A (%d+%d+%d)", oldA, oldB, oldConditionalFlag);
 				break;
 			case 0xB: // NAND
 				A = (~(A & B) & 0xF);
-				printf("NAND B,A (%d nand %d)", oldA, oldB);
 				break;
 			case 0xC: // CMP
-				printf("CMP ");
 				switch(immediate & 0b0111) {
 					case 0: // Reset
 						conditionalFlag = 0;
-						printf("Reset");
 						break;
 					case 1: // Not Zero
 						conditionalFlag = ~(A == 0);
-						printf("Not Zero");
 						break;
 					case 2: // Not Equal
 						conditionalFlag = ~(A == B);
-						printf("Not Equal");
 						break;
 					case 3: // Not Sign
 						conditionalFlag = ~((A&0b1000) >> 3);
-						printf("Not Sign");
 						break;
 					default:
-						printf("Invalid condition!\n");
+						break;
 				}
 				break;
 			case 0xD: // ST
 				mem[0xF0 | immediate] = (B << 4) | B;
-				printf("ST B,[%01X] (%01X%01X)", immediate, B,B);
 				break;
 			case 0xE: // JP
 				PC = (immediate << 4) & 0xF0;
 				jumped = 1;
-				printf("JP (far)");
 				break;
 			case 0xF: // JPC
 				if (conditionalFlag) {
 					PC = (immediate << 4) & 0xF0;
 					jumped = 1;
 				}
-				printf("JPC (far)");
 				break;
 		}
-		printf("\n");
+		if (debugOutput & printExecInst) {
+			printExecutedInstruction();
+		}
 		// Limit Registers to intended Range
 		A         = A          & 0x0F;
 		B         = B          & 0x0F;
 		PC        = PC         & 0xFF;
 		conditionalFlag = conditionalFlag  & 0x01;
 		// Print changes
-		if (A != oldA) {
-			printf("\t\tA: %01X -> %01X\n", oldA, A);
+		if (debugOutput & printChanges) {
+			if (A != oldA) {
+				printIndent();
+				printf("A:\t%01X -> %01X\n", oldA, A);
+			}
+			if (B != oldB) {
+				printIndent();
+				printf("B:\t%01X -> %01X\n", oldB, B);
+			}
+			if (PC != oldPC) {
+				printIndent();
+				printf("PC:\t%02X -> %02X\n", oldPC, PC);
+			}
+			if (conditionalFlag != oldConditionalFlag) {
+				printIndent();
+				printf("Cond:\t%d -> %d\n", oldConditionalFlag, conditionalFlag);
+			}
 		}
-		if (B != oldB) {
-			printf("\t\tB: %01X -> %01X\n", oldB, B);
-		}
-		if (PC != oldPC) {
-			printf("\t\tPC: 0x%02X -> 0x%02X\n", oldPC, PC);
-		}
-		if (conditionalFlag != oldConditionalFlag) {
-			printf("\t\tCarry: %d -> %d\n", oldConditionalFlag, conditionalFlag);
-		}
+
 		if (!jumped) {
 			PC++;
 		} else {
