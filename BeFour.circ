@@ -1402,8 +1402,14 @@
     <comp lib="8" loc="(1650,50)" name="Text">
       <a name="text" val="Registers"/>
     </comp>
-    <comp lib="8" loc="(4530,1195)" name="Text">
+    <comp lib="8" loc="(4613,1252)" name="Text">
+      <a name="text" val="SHOULD BE REPLACED WITH"/>
+    </comp>
+    <comp lib="8" loc="(4641,1223)" name="Text">
       <a name="text" val="This is basically a Multiplexer"/>
+    </comp>
+    <comp lib="8" loc="(4856,1278)" name="Text">
+      <a name="text" val="https://www.reichelt.de/cmos-logik-multiplexer-8-eingaenge-2--6-v-dil-16-74hct-151-p3322.html"/>
     </comp>
     <wire from="(1080,580)" to="(1090,580)"/>
     <wire from="(1150,540)" to="(1160,540)"/>
