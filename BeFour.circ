@@ -1071,10 +1071,16 @@
       <a name="control" val="left"/>
       <a name="width" val="4"/>
     </comp>
-    <comp lib="1" loc="(1330,1450)" name="NOT Gate"/>
+    <comp lib="1" loc="(1330,1460)" name="NOT Gate"/>
     <comp lib="1" loc="(1330,380)" name="NOT Gate"/>
     <comp lib="1" loc="(1360,370)" name="AND Gate">
       <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(1380,1450)" name="NOT Gate">
+      <a name="size" val="20"/>
+    </comp>
+    <comp lib="1" loc="(1380,1460)" name="NOT Gate">
+      <a name="size" val="20"/>
     </comp>
     <comp lib="1" loc="(1500,330)" name="OR Gate">
       <a name="inputs" val="3"/>
@@ -1402,13 +1408,13 @@
     <comp lib="8" loc="(1650,50)" name="Text">
       <a name="text" val="Registers"/>
     </comp>
-    <comp lib="8" loc="(4613,1252)" name="Text">
+    <comp lib="8" loc="(4610,1250)" name="Text">
       <a name="text" val="SHOULD BE REPLACED WITH"/>
     </comp>
-    <comp lib="8" loc="(4641,1223)" name="Text">
+    <comp lib="8" loc="(4640,1220)" name="Text">
       <a name="text" val="This is basically a Multiplexer"/>
     </comp>
-    <comp lib="8" loc="(4856,1278)" name="Text">
+    <comp lib="8" loc="(4855,1275)" name="Text">
       <a name="text" val="https://www.reichelt.de/cmos-logik-multiplexer-8-eingaenge-2--6-v-dil-16-74hct-151-p3322.html"/>
     </comp>
     <wire from="(1080,580)" to="(1090,580)"/>
@@ -1444,8 +1450,8 @@
     <wire from="(1280,1010)" to="(1280,1110)"/>
     <wire from="(1280,1440)" to="(1280,1450)"/>
     <wire from="(1280,1450)" to="(1280,1460)"/>
-    <wire from="(1280,1450)" to="(1300,1450)"/>
-    <wire from="(1280,1460)" to="(1380,1460)"/>
+    <wire from="(1280,1450)" to="(1360,1450)"/>
+    <wire from="(1280,1460)" to="(1300,1460)"/>
     <wire from="(1280,380)" to="(1280,420)"/>
     <wire from="(1280,380)" to="(1300,380)"/>
     <wire from="(1290,1140)" to="(1420,1140)"/>
@@ -1457,7 +1463,7 @@
     <wire from="(1310,1210)" to="(1420,1210)"/>
     <wire from="(1320,1010)" to="(1320,1250)"/>
     <wire from="(1330,1280)" to="(1420,1280)"/>
-    <wire from="(1330,1450)" to="(1380,1450)"/>
+    <wire from="(1330,1460)" to="(1360,1460)"/>
     <wire from="(1360,370)" to="(1370,370)"/>
     <wire from="(1370,330)" to="(1370,370)"/>
     <wire from="(1370,330)" to="(1450,330)"/>
