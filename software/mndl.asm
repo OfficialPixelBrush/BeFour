@@ -11,11 +11,14 @@
 ; set coordinate to check
 ; no mapping of the range, we will give in range of -2 to 2
 ; memory locations
-ZX = 0
-ZY = 1
-TEMP = 2
-MULTIPLYTEMP = 3
-ITERATOR = 4
+CX = 0
+CY = 1
+ZX = 2
+ZY = 3
+TEMP = 4
+ITERATOR = 6
+ByteLower = 7
+ByteUpper = 8
 
 ; last 8 Byte for pixel output??
 
