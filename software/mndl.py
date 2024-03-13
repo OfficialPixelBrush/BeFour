@@ -41,4 +41,4 @@ for y in range(-4,4):
             print('#', end='')
         else:
             print(".", end='')
-    print();
+    print()

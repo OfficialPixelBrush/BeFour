@@ -66,15 +66,11 @@
     <sep/>
     <tool lib="1" name="NOT Gate"/>
     <tool lib="1" name="AND Gate"/>
-    <tool lib="1" name="OR Gate">
-      <a name="facing" val="north"/>
-    </tool>
+    <tool lib="1" name="OR Gate"/>
     <tool lib="1" name="XOR Gate">
       <a name="facing" val="north"/>
     </tool>
-    <tool lib="1" name="NAND Gate">
-      <a name="facing" val="north"/>
-    </tool>
+    <tool lib="1" name="NAND Gate"/>
     <tool lib="1" name="NOR Gate">
       <a name="facing" val="north"/>
     </tool>
@@ -685,6 +681,14 @@
     <comp lib="0" loc="(3070,1090)" name="Tunnel">
       <a name="label" val="ADDRESSING"/>
     </comp>
+    <comp lib="0" loc="(320,890)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="INCPC"/>
+    </comp>
+    <comp lib="0" loc="(320,930)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="OP2"/>
+    </comp>
     <comp lib="0" loc="(340,680)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="PerformJump"/>
@@ -703,14 +707,6 @@
       <a name="facing" val="south"/>
       <a name="label" val="AOUT"/>
       <a name="width" val="4"/>
-    </comp>
-    <comp lib="0" loc="(360,890)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="INCPC"/>
-    </comp>
-    <comp lib="0" loc="(360,930)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="OP2"/>
     </comp>
     <comp lib="0" loc="(420,1030)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -1187,14 +1183,14 @@
     <comp lib="1" loc="(350,460)" name="NOT Gate"/>
     <comp lib="1" loc="(400,440)" name="OR Gate"/>
     <comp lib="1" loc="(400,700)" name="OR Gate"/>
-    <comp lib="1" loc="(440,910)" name="AND Gate"/>
+    <comp lib="1" loc="(400,910)" name="AND Gate"/>
+    <comp lib="1" loc="(430,910)" name="NOT Gate"/>
     <comp lib="1" loc="(480,1050)" name="OR Gate"/>
     <comp lib="1" loc="(530,850)" name="AND Gate"/>
     <comp lib="1" loc="(550,1760)" name="NOT Gate">
       <a name="facing" val="south"/>
       <a name="size" val="20"/>
     </comp>
-    <comp lib="1" loc="(550,910)" name="NOT Gate"/>
     <comp lib="1" loc="(560,1770)" name="Controlled Buffer">
       <a name="control" val="left"/>
     </comp>
@@ -1407,6 +1403,9 @@
     </comp>
     <comp lib="8" loc="(1650,50)" name="Text">
       <a name="text" val="Registers"/>
+    </comp>
+    <comp lib="8" loc="(290,851)" name="Text">
+      <a name="text" val="TODO: replacing this with a NAND breaks it!"/>
     </comp>
     <wire from="(1000,2570)" to="(1050,2570)"/>
     <wire from="(1050,2290)" to="(1180,2290)"/>
@@ -1751,6 +1750,8 @@
     <wire from="(3010,1130)" to="(3010,1180)"/>
     <wire from="(3010,1130)" to="(3020,1130)"/>
     <wire from="(3010,960)" to="(3010,1050)"/>
+    <wire from="(320,890)" to="(350,890)"/>
+    <wire from="(320,930)" to="(350,930)"/>
     <wire from="(340,680)" to="(350,680)"/>
     <wire from="(340,720)" to="(350,720)"/>
     <wire from="(360,1290)" to="(360,1530)"/>
@@ -1759,8 +1760,6 @@
     <wire from="(360,1600)" to="(360,1620)"/>
     <wire from="(360,1600)" to="(540,1600)"/>
     <wire from="(360,1620)" to="(700,1620)"/>
-    <wire from="(360,890)" to="(390,890)"/>
-    <wire from="(360,930)" to="(390,930)"/>
     <wire from="(380,1290)" to="(380,1470)"/>
     <wire from="(380,1470)" to="(380,1590)"/>
     <wire from="(380,1470)" to="(540,1470)"/>
@@ -1780,7 +1779,7 @@
     <wire from="(430,700)" to="(430,830)"/>
     <wire from="(430,700)" to="(650,700)"/>
     <wire from="(430,830)" to="(480,830)"/>
-    <wire from="(440,910)" to="(520,910)"/>
+    <wire from="(430,910)" to="(570,910)"/>
     <wire from="(450,2000)" to="(520,2000)"/>
     <wire from="(450,2020)" to="(520,2020)"/>
     <wire from="(450,2040)" to="(520,2040)"/>
@@ -1826,7 +1825,6 @@
     <wire from="(540,540)" to="(540,620)"/>
     <wire from="(540,540)" to="(580,540)"/>
     <wire from="(550,1710)" to="(550,1740)"/>
-    <wire from="(550,910)" to="(570,910)"/>
     <wire from="(560,1770)" to="(590,1770)"/>
     <wire from="(560,1900)" to="(580,1900)"/>
     <wire from="(570,1710)" to="(570,1780)"/>
