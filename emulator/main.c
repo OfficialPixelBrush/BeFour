@@ -3,6 +3,7 @@
 
 #define MEMSIZE 256
 typedef unsigned char byte;
+typedef unsigned short word;
 
 #define printCurrentState 1 << 0
 #define printExecInst     1 << 1
@@ -36,13 +37,13 @@ int debugOutput = 0;
 // Regs
 byte A = 0;
 byte B = 0;
-byte PC = 0;
+word PC = 0;
 byte conditionalFlag = 0;
 
 // Old Regs
 byte oldA = 0;
 byte oldB = 0;
-byte oldPC = 0;
+word oldPC = 0;
 byte oldConditionalFlag = 0;
 
 // Internal magics
@@ -93,11 +94,11 @@ int printExecutedInstruction() {
 		case 0x5: // ST
 			printf("ST A,[%01X] (%01X%01X)", immediate, A&0xF, B);
 			break;
-		case 0x6: // JP
-			printf("JP (near)");
+		case 0x6: // STPC
+			printf("SP PCL,[%03X]", PC);
 			break;
-		case 0x7: // JPC
-			printf("JPC (near)");
+		case 0x7: // JP
+			printf("JP");
 			break;
 		// B mode
 		case 0x8: // LDI
@@ -179,10 +180,25 @@ int main(int argc, char *argv[]) {
 	while((currentCycle < maxCycle) || (maxCycle == -1)) {
 		inst = mem[PC] & 0x0F;
 		immediate = (mem[PC] & 0xF0) >> 4;
+
 		//printf("A:%X, B: %X | PC:%02X\n",A,B,PC);
 		if (debugOutput & printCurrentState) {
 			printf("Inst: %X, immediate: %X | A:%X, B: %X, Cond:%X | PC:%02X\n", inst,immediate,A,B,conditionalFlag,PC);
 		}
+
+		// For multi-byte instructions
+		switch(inst & 0b0111) {
+			case 0x1: // LD
+			case 0x5: // ST
+			case 0x6: // STPC
+			case 0x7: // JP/JPC
+				PC++;
+				PC &= 0xFFF;
+				immediate = immediate | (mem[PC] << 4);
+				printf("Multi-byte:\t");
+				break;
+		}
+
 		switch(inst) {
 			// A mode
 			case 0x0: // LDI
@@ -222,24 +238,21 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 0x5: // ST
-				mem[0xF0 | immediate] = (A << 4) | B;
+				mem[immediate] = (A << 4) | B;
 				break;
-			case 0x6: // JP
-				PC = (PC & 0xF0) | immediate;
+			case 0x6: // STPC
+				mem[immediate] = ((PC&0x00F) << 4) | B;
+				break;
+			case 0x7: // JP
+				PC = immediate;
 				jumped = 1;
-				break;
-			case 0x7: // JPC
-				if (conditionalFlag) {
-					PC = (PC & 0xF0) | immediate;
-					jumped = 1;
-				}
 				break;
 			// B mode
 			case 0x8: // LDI
 				B = immediate;
 				break;
 			case 0x9: // LD
-				B = mem[0xF0 | immediate] >> 4;
+				B = mem[immediate] >> 4;
 				break;
 			case 0xA: // ADD
 				A = A + B + conditionalFlag;
@@ -272,15 +285,14 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 0xD: // ST
-				mem[0xF0 | immediate] = (B << 4) | B;
+				mem[immediate] = (B << 4) | B;
 				break;
-			case 0xE: // JP
-				PC = (immediate << 4) & 0xF0;
-				jumped = 1;
+			case 0xE: // STPC
+				mem[immediate] = ((PC&0xFF0) >> 4);
 				break;
 			case 0xF: // JPC
 				if (conditionalFlag) {
-					PC = (immediate << 4) & 0xF0;
+					PC = immediate;
 					jumped = 1;
 				}
 				break;
@@ -289,9 +301,9 @@ int main(int argc, char *argv[]) {
 			printExecutedInstruction();
 		}
 		// Limit Registers to intended Range
-		A         = A          & 0x0F;
-		B         = B          & 0x0F;
-		PC        = PC         & 0xFF;
+		A         = A          &  0x0F;
+		B         = B          &  0x0F;
+		PC        = PC         & 0xFFF;
 		conditionalFlag = conditionalFlag  & 0x01;
 		// Print changes
 		if (debugOutput & printChanges) {
